@@ -1,7 +1,7 @@
 package handler
 
 import (
-	log "common/alog"
+	//log "common/alog"
 	"fmt"
 	com "freeERP/free_erp/common"
 	"freeERP/free_erp/utils"
@@ -32,7 +32,8 @@ func GetUserID(sessionid string) int64 {
 	sqlClause := utils.GetEscapeSqlClause("select user_id from user where sessionid='%s' and session_ttl < %d", sessionid, timestamp)
 	datas, err := com.GSQLHelper.GetQueryDataList(sqlClause)
 	if err != nil || len(datas) == 0 {
-		log.Errorf("GetUserID sessionid[%s] error[%v] timestamp[%d] sqlClause[%s]", sessionid, err, timestamp, sqlClause)
+		fmt.Printf("GetUserID sessionid[%s] error[%v] timestamp[%d] sqlClause[%s]", sessionid, err, timestamp, sqlClause)
+		//log.Errorf("GetUserID sessionid[%s] error[%v] timestamp[%d] sqlClause[%s]", sessionid, err, timestamp, sqlClause)
 		return -1
 	}
 	return utils.StrToInt64(datas[0]["user_id"])
@@ -42,13 +43,15 @@ func GetUserID(sessionid string) int64 {
 func Login(c *gin.Context) {
 	username := utils.EscapeStringBackslash(c.Query("username"))
 	password := utils.EscapeStringBackslash(c.Query("password"))
-	log.Infof("Login username[%s] password[%s] IP[%s]", username, password, c.ClientIP())
+	fmt.Printf("Login username[%s] password[%s] IP[%s]", username, password, c.ClientIP())
+	//log.Infof("Login username[%s] password[%s] IP[%s]", username, password, c.ClientIP())
 
 	sqlClause := utils.GetEscapeSqlClause("select user_id, username, auth, sessionid, session_ttl from user where username='%s' and password='%s'", username, password)
 	datas, err := com.GSQLHelper.GetQueryDataList(sqlClause)
 	if err != nil || len(datas) == 0 {
 		c.JSON(http.StatusOK, gin.H{"code": -1, "msg": "login error!"})
-		log.Errorf("Login username[%s] password[%s] error[%v] sqlClause[%s]", username, password, err, sqlClause)
+		fmt.Printf("Login username[%s] password[%s] error[%v] sqlClause[%s]", username, password, err, sqlClause)
+		//log.Errorf("Login username[%s] password[%s] error[%v] sqlClause[%s]", username, password, err, sqlClause)
 		return
 	}
 
@@ -73,7 +76,8 @@ func GetAuth(c *gin.Context) {
 func Logout(c *gin.Context) {
 	username := c.Query("username")
 
-	log.Infof("Logout username[%s] IP[%s]", username, c.ClientIP())
+	fmt.Printf("Logout username[%s] IP[%s]", username, c.ClientIP())
+	//log.Infof("Logout username[%s] IP[%s]", username, c.ClientIP())
 
 	com.GSQLHelper.UpdateDataByMap("user", map[string]interface{}{"sessionid": ""}, " where username='"+username+"'")
 

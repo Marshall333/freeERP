@@ -1,7 +1,7 @@
 package mysql
 
 import (
-	log "common/alog"
+	//log "common/alog"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -40,7 +40,8 @@ func (this *SQLHelper) Init(dataSourceName string) {
 	var err error
 	this.db, err = sql.Open("mysql", dataSourceName)
 	if err != nil {
-		log.Fatal("Open db error. error: ", err)
+		fmt.Printf("Open db error. error: %+v", err)
+		//log.Fatal("Open db error. error: ", err)
 	}
 
 	this.db.SetMaxOpenConns(2000)
@@ -48,7 +49,8 @@ func (this *SQLHelper) Init(dataSourceName string) {
 	this.db.SetConnMaxLifetime(time.Second * 3600)
 	err = this.db.Ping()
 	if err != nil {
-		log.Fatal("db Ping error. error: ", err)
+		fmt.Printf("db Ping error. error: %+v", err)
+		//log.Fatal("db Ping error. error: ", err)
 	}
 }
 
@@ -85,7 +87,8 @@ func (this *SQLHelper) Close() {
 func (this *SQLHelper) GetQueryDataList(sqlClause string, args ...interface{}) ([]map[string]string, error) {
 	rows, err := this.db.Query(sqlClause, args...)
 	if err != nil {
-		log.Error("query error: ", err)
+		fmt.Printf("query error: %+v", err)
+		//log.Error("query error: ", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -135,7 +138,8 @@ func (this *SQLHelper) GetQueryDataList(sqlClause string, args ...interface{}) (
 func (this *SQLHelper) ExecSqlClause(sqlClause string) (int64, error) {
 	result, err := this.db.Exec(sqlClause)
 	if err != nil {
-		log.Error("exec sql error: ", err)
+		fmt.Printf("exec sql error: %+v", err)
+		//log.Error("exec sql error: ", err)
 		return 0, err
 	}
 	rowAffected, err := result.RowsAffected()
@@ -152,7 +156,8 @@ func (this *SQLHelper) ExecSqlClause(sqlClause string) (int64, error) {
 func (this *SQLHelper) Insert(sqlClause string) (int64, error) {
 	result, err := this.db.Exec(sqlClause)
 	if err != nil {
-		log.Error("exec sql error: ", err)
+		fmt.Printf("exec sql error: %+v", err)
+		//log.Error("exec sql error: ", err)
 		return 0, err
 	}
 	lastInsertId, err := result.LastInsertId()
@@ -196,7 +201,8 @@ func (this *SQLHelper) InsertMapData(data map[string]string, table string, repla
 
 	lastInsertId, err := this.Insert(sqlClause)
 	if err != nil {
-		log.Error(err.Error())
+		fmt.Printf(err.Error())
+		//log.Error(err.Error())
 		return 0, err
 	}
 
@@ -259,7 +265,8 @@ func (this *SQLHelper) InsertListData(dataList []map[string]string, table string
 
 	lastInsertId, err := this.Insert(sqlClause)
 	if err != nil {
-		log.Error(err.Error())
+		fmt.Printf(err.Error())
+		//log.Error(err.Error())
 		return 0, err
 	}
 
@@ -289,7 +296,8 @@ func (this *SQLHelper) InsertDataByMap(tableName string, insertMap map[string]in
 	sqlCluse := "insert into " + tableName + "(" + fieldListStr + ") values(" + tmpStr + ")"
 	result, err := this.db.Exec(sqlCluse, valueList...)
 	if err != nil {
-		log.Error("SQL Error, SQL:", sqlCluse, err)
+		fmt.Printf("SQL Error, SQL: ", sqlCluse, err)
+		//log.Error("SQL Error, SQL:", sqlCluse, err)
 		return 0, err
 	}
 	lastInsertId, err := result.LastInsertId()
@@ -313,7 +321,8 @@ func (this *SQLHelper) UpdateDataByMap(tableName string, dataMap map[string]inte
 	sqlCluse = sqlCluse + sqlCondition
 	result, err := this.db.Exec(sqlCluse, valueList...)
 	if err != nil {
-		log.Error("SQL Error, SQL:", sqlCluse, err)
+		fmt.Printf("SQL Error, SQL:", sqlCluse, err)
+		//log.Error("SQL Error, SQL:", sqlCluse, err)
 		return 0, err
 	}
 	rowAffected, err := result.RowsAffected()

@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	com "freeERP/free_erp/common"
 	"freeERP/free_erp/handler"
 	confUtil "freeERP/free_erp/utils/config"
 	sqlLib "freeERP/free_erp/utils/mysql"
-
 	"github.com/CodisLabs/codis/pkg/utils/log"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -33,13 +33,16 @@ func main() {
 	confPath := flag.String("c", "", "")
 	flag.Parse()
 	if *confPath == "" {
-		log.Errorf("config path can't null!")
+		fmt.Println("config path can't null!")
+		//log.Errorf("config path can't null!")
 		return
 	}
 
 	InitServer(*confPath)
 
 	com.Gin = gin.Default()
+
+	//com.Gin.Use(GinLoggerWithConfig(os.Stdout))
 
 	// 获取商品列表
 	com.Gin.Any("/get_commodity_list", repoManager.GetCommodityList)

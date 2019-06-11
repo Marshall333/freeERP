@@ -2,8 +2,8 @@ package handler
 
 import (
 	"fmt"
-	com "free_erp/common"
-	"free_erp/utils"
+	com "freeERP/free_erp/common"
+	"freeERP/free_erp/utils"
 	"net/http"
 	"strings"
 
